@@ -2,7 +2,7 @@
 
 步骤1 ： 解决翻墙问题
        
-       安装过程需要下载coreos镜像。我在百度网盘提供了安装过程中需要的所有文件： [http://pan.baidu.com/s/1sjNSJFJ](http://pan.baidu.com/s/1sjNSJFJ)，因此你需要做的就是下载这四个文件，然后放在一个你可以简单的wget到的位置。例如，我就是在virtualbox上面，虚拟了一个ubuntu，设置网络为网桥，假设ip为192.168.1.130，然后安装一个apache2,并且将其放在/var/www/html下面，
+安装过程需要下载coreos镜像。我在百度网盘提供了安装过程中需要的所有文件： [http://pan.baidu.com/s/1sjNSJFJ](http://pan.baidu.com/s/1sjNSJFJ)，因此你需要做的就是下载这四个文件，然后放在一个你可以简单的wget到的位置。例如，我就是在virtualbox上面，虚拟了一个ubuntu，设置网络为网桥，假设ip为192.168.1.130，然后安装一个apache2,并且将其放在/var/www/html下面，
 ```
 root@ubuntu:/var/www/html# ls 
 444.5.0 coreos-install coreos_production_image.bin.bz2 id_rsa.pub static.network 
@@ -12,7 +12,7 @@ cloud-config.yaml coreos-install2 coreos_production_image.bin.bz2.sig index.html
 
 步骤2 :  配置cloud-config.yaml
     
-    安装过程中最重要的就是修改cloud-config.yaml。我在步骤一已经为大家提供了一个配置模板，大家需要修改的是`ssh-authorized-keys`对应的值。这个是你登录coreos的跳板机ssh的公钥，可以通过如下步骤简单的生成：
+安装过程中最重要的就是修改cloud-config.yaml。我在步骤一已经为大家提供了一个配置模板，大家需要修改的是`ssh-authorized-keys`对应的值。这个是你登录coreos的跳板机ssh的公钥，可以通过如下步骤简单的生成：
 ```
 root@ubuntu:~# ssh-keygen
 enter
