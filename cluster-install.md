@@ -110,7 +110,7 @@ d4937498...	192.168.1.120	-
 
 ##### systemd测试
 
-测试需要使用到fleet，暂时没有做专门的介绍，大家可以先看看[这里](),暂时熟悉下，后面会专门介绍。
+测试需要使用到fleet，暂时没有做专门的介绍，大家可以先看看[这里](https://github.com/coreos/fleet/blob/master/Documentation/using-the-client.md),暂时熟悉下，后面会专门介绍。
 这是一个简单的unit文件（可以理解为服务描叙文件），保存为myapp.service
 ```
 [Unit]
