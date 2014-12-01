@@ -1,6 +1,7 @@
 #### 目录
 * 集群安装
 * 集群测试
+
 > 
 1， systemd测试
 2， fleet测试
@@ -257,15 +258,13 @@ Dec 01 17:15:46 coreos3 docker[1620]: Hello World
 Dec 01 17:15:47 coreos3 docker[1620]: Hello World 
 Dec 01 17:15:48 coreos3 docker[1620]: Hello World 
 Dec 01 17:15:49 coreos3 docker[1620]: Hello World 
-Dec 01 17:15:50 coreos3 docker[1620]: Hello World 
-Dec 01 17:15:51 coreos3 docker[1620]: Hello World 
-Dec 01 17:15:52 coreos3 docker[1620]: Hello World 
-Dec 01 17:15:53 coreos3 docker[1620]: Hello World 
-Dec 01 17:15:54 coreos3 docker[1620]: Hello World 
-Dec 01 17:15:55 coreos3 docker[1620]: Hello World
+
 ```
+
 恭喜你， 测试成功了！！！！
+
 当然，要到这一步非常不容易。 中间碰到很多问题暂时不一一记录了，主要是ssh授权的问题。大家可以加Q群：412065906，一起交流讨论。 
+
 接下来， 我会将coreos的各个组件一一给大家介绍。 
 
 
