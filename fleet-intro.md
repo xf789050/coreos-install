@@ -130,13 +130,13 @@ fleet定义了3个集群层面的状态：
 
 状态机的转移图
 
- || Command	 || Desired State	|| Valid Previous States
- || fleetctl submit ||	inactive ||	(unknown)
- || fleetctl load	 || loaded || 	(unknown) or inactive
- || fleetctl start || 	launched || 	(unknown) or inactive or loaded
- || fleetctl stop || 	loaded || 	launched
- || fleetctl unload || 	inactive || 	launched or loaded
- || fleetctl destroy || 	(unknown)	 || launched or loaded or inactive
+ || Command	 || Desired State	|| Valid Previous States || 
+ || fleetctl submit ||	inactive ||	(unknown) || 
+ || fleetctl load	 || loaded || 	(unknown) or inactive || 
+ || fleetctl start || 	launched || 	(unknown) or inactive or loaded || 
+ || fleetctl stop || 	loaded || 	launched || 
+ || fleetctl unload || 	inactive || 	launched or loaded || 
+ || fleetctl destroy || 	(unknown)	 || launched or loaded or inactive || 
 
 ##### systemd states
 
