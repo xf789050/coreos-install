@@ -1,11 +1,5 @@
 #### 单机fleet： systemd
 
-| *Year* | *Temperature (low)* | *Temperature (high)* |
-| :------ | :----------------: | --------------------: |
-| 1900 | -10 | 25 |
-| 1910 | -15 | 30 |
-| 1920 | -10 | 32 |
-
 传统的sysvinit使用[inittab](http://www.2cto.com/os/201108/98426.html)来控制init完成之后，执行哪些shell脚本。大量的shell脚本执行，效率低下， 并且无法并行执行。因此产出了systemd。systemd 是linux操作系统下面系统和服务的init管理软件,当boot过程启动第一个进程（PID=1）的时候，systemd启动并且维护用户空间的服务。旨在尽可能启动更少进程；尽可能将更多进程并行启动，“其开发目标是提供更优秀的框架以表示系统服务间的依赖关系，并依此实现系统初始化时服务的并行启动，同时达到降低Shell的系统开销的效果，最终代替现在常用的System V与BSD风格init程序”(摘自http://zh.wikipedia.org/wiki/Systemd)。
 
 systemd的特性有：
@@ -136,13 +130,14 @@ fleet定义了3个集群层面的状态：
 
 状态机的转移图
 
-|| Command	 || Desired State	|| Valid Previous States || 
-|| fleetctl submit ||	inactive ||	(unknown) || 
-|| fleetctl load	 || loaded || 	(unknown) or inactive || 
-|| fleetctl start || 	launched || 	(unknown) or inactive or loaded || 
-|| fleetctl stop || 	loaded || 	launched || 
-|| fleetctl unload || 	inactive || 	launched or loaded || 
-|| fleetctl destroy || 	(unknown)	 || launched or loaded or inactive || 
+| Command	| Desired State	| Valid Previous States | 
+| :-----: | :-----------: | :-------------------: |
+| fleetctl submit |	inactive |	(unknown) | 
+| fleetctl load	| loaded | (unknown) or inactive | 
+| fleetctl start | launched |	(unknown) or inactive or loaded | 
+| fleetctl stop |	loaded | launched |
+| fleetctl unload |	inactive | launched or loaded |
+| fleetctl destroy |	(unknown)	| launched or loaded or inactive | 
 
 ##### systemd states
 
