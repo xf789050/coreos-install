@@ -81,8 +81,8 @@ systemctl start myapp.service的流程就是： myapp.service启动之前需要�
 
 #### coreos的[go-systemd](https://github.com/coreos/go-systemd)
 systemd的go封装。有如下几个服务包：
-* activation 支持写入和使用socket式激活；
-* dbus提供运行服务和单元的启停，查询；
+* activation 实现socket激活的基本接口；
+* dbus提供运行服务和单元的启停，查询接口；
 * journal支持写入systemd的logging service;
 * unit 支持units文件的序列化，反序列化以及对比
 
@@ -143,7 +143,7 @@ fleet定义了3个集群层面的状态：
 
 systemd 状态只能出现在 units state为loaded或者launched的情况下。
 
-* LOAD ： 反应一个unit 定义块是否正确加载
+* LOAD ： 反应一个unit定义块是否正确加载
 * ACTIVE  ： 高等级的unit 激活状态
 * SUB ： 低级别的unit激活状态，根据unit的type来确认值
 
