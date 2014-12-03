@@ -88,6 +88,7 @@ systemd的go封装。有如下几个服务包：
 
 #### fleet
 
+
 fleet基于etcd（分布式kv）和systemd构建，在coreos集群上提供分布式，高容错的应用部署服务。
 你可以认为coreos集群共享同一个分布式的systemd，coreos建议用户将应用写的小而且容易在集群内迁移。
 
@@ -95,8 +96,14 @@ fleet基于etcd（分布式kv）和systemd构建，在coreos集群上提供分�
 
 ##### fleetd 
 
+coreos集群
+
+
+
 coreos集群中的每个系统都执行一个单独的fleetd守护进程。fleetd即是engine，也可以是client。engine担当units调度决策者，agent担当unit执行者。engine和client使
 用协调模式，周期性的产生实例当前的状态的一个快照，并且跟etcd维护的期望状态对比，并且产生一定的动作来满足期望。
+
+
 
 1， Engine
 
