@@ -17,20 +17,20 @@ systemd的特性有：
 ```
 core@coreos1 ~ $ systemctl cat myapp.service 
 # /etc/systemd/system/myapp.service 
-[Unit]   #基本配置信息和依赖关系
+[Unit] #基本配置信息和依赖关系
 Description=MyApp 
-After=docker.service   ##当前单元必须在docker.service启动之后才启动
-Requires=docker.service  ## 表示强依赖，如果是Wants=docker.service，则表示依赖关系可选。如果After=，则2个单元同时启动
+After=docker.service ##当前单元必须在docker.service启动之后才启动
+Requires=docker.service ## 表示强依赖，如果是Wants=docker.service，则表示依赖关系可选。如果After=，则2个单元同时启动
 
-[Service]  # 服务特定的配置信息
-TimeoutStartSec=0   # 服务启动限时，0表示不限制， 如果超时，服务启动失败，并且被关闭。
-ExecStartPre=-/usr/bin/docker kill busybox1    #ExecStart之前执行的命令，如果加=后面带-，表示执行失败，其他的命令继续执行，多个同样的命令按照先后顺序执行
+[Service] # 服务特定的配置信息
+TimeoutStartSec=0 # 服务启动限时，0表示不限制， 如果超时，服务启动失败，并且被关闭。
+ExecStartPre=-/usr/bin/docker kill busybox1 #ExecStart之前执行的命令，如果加=后面带-，表示执行失败，其他的命令继续执行，多个同样的命令按照先后顺序执行
 ExecStartPre=-/usr/bin/docker rm busybox1 
 ExecStartPre=/usr/bin/docker pull busybox 
-ExecStart=/usr/bin/docker run --name busybox1 busybox /bin/sh -c "while true; do  #服务启动之后，执行的命令
+ExecStart=/usr/bin/docker run --name busybox1 busybox /bin/sh -c "while true; do #服务启动之后，执行的命令
 
 [Install] 
-WantedBy=multi-user.target  #
+WantedBy=multi-user.target #
 ```
 myapp.service依赖于docker.service。再看看docker.service
 ```
@@ -42,7 +42,7 @@ Documentation=http://docs.docker.io
 Requires=docker.socket 
 
 [Service] 
-Environment="TMPDIR=/var/tmp/"    #添加环境变量
+Environment="TMPDIR=/var/tmp/" #添加环境变量
 ExecStartPre=/bin/mount --make-rprivate / 
 LimitNOFILE=1048576 
 LimitNPROC=1048576 
@@ -51,7 +51,7 @@ LimitNPROC=1048576
 ExecStart=/usr/bin/docker --daemon --storage-driver=btrfs --host=fd:// 
 
 [Install] 
-WantedBy=multi-user.target  #在multi-user.target下面启动
+WantedBy=multi-user.target #在multi-user.target下面启动
 
 core@coreos1 ~ $ systemctl cat docker.socket 
 # /usr/lib64/systemd/system/docker.socket 
@@ -59,10 +59,10 @@ core@coreos1 ~ $ systemctl cat docker.socket
 Description=Docker Socket for the API 
 
 [Socket] 
-SocketMode=0660  #socket文件的file mode
-SocketUser=docker  # 所属用户和组
+SocketMode=0660 #socket文件的file mode
+SocketUser=docker # 所属用户和组
 SocketGroup=docker 
-ListenStream=/var/run/docker.sock  #监听网络流， sequential packet等的地址
+ListenStream=/var/run/docker.sock #监听网络流， sequential packet等的地址
 
 [Install] 
 WantedBy=sockets.target 
@@ -98,7 +98,7 @@ fleet基于etcd（分布式kv）和systemd构建，在coreos集群上提供分�
 coreos集群中的每个系统都执行一个单独的fleetd守护进程。fleetd即是engine，也可以是client。engine担当units调度决策者，agent担当unit执行者。engine和client使
 用协调模式，周期性的产生实例当前的状态的一个快照，并且跟etcd维护的期望状态对比，并且产生一定的动作来满足期望。
 
-1，  Engine
+1， Engine
 
 * Engine负责调度。在跟agent的协调过程中，周期性的或者根据etcd发出的事件触发对应的调度策略。
 * 在协调进程运行之前，engine收集集群全体的一个快照信息，包括集群里面所有units的已知状态和期望状态，以及正在运行的agents的集合，并且已知努力去将units的实际状态向期望状态靠近。
@@ -141,17 +141,16 @@ fleet定义了3个集群层面的状态：
 
 ##### systemd states
 
-systemd 状态只能出现在 units state为loaded或者launched的情况下。
+systemd 状态只能出现在 units state为loaded或者launched的情况下。`systemctl list-units`可以看到对应的unit的system state
 
-* LOAD ： 反应一个unit定义块是否正确加载
-* ACTIVE  ： 高等级的unit 激活状态
-* SUB ： 低级别的unit激活状态，根据unit的type来确认值
+* LOAD ： 反应一个unit 定义块是否正确加载
+* ACTIVE ： 表示unit是否可以被正常调度，是active还是failed。
+* SUB ： 根据unit执行的返回值判断是否正常running，exited/plugged/mounted，还是failed
 
 #### 安全性
 
 目前fleet并不对提交units进行任何的权限验证。任何client都能访问你的etcd集群，在多数机器上都能任意的跑你的代码。
 但是公网如果要访问你的etcd集群，就要使用ssh tunnel方式，带上--tunnel 参数来访问。
-
 
 
 
