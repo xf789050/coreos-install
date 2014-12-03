@@ -12,8 +12,8 @@ systemd的特性有：
 * 各服务间基于依赖关系进行精密控制。
 
 有关使用systemd的文档： [http://www.freedesktop.org/software/systemd/man/](http://www.freedesktop.org/software/systemd/man/)
+
 举个例子来说明他的功能和使用方法。测试环境当然选择安装好的coreos host。
-下面来实际看一个例子。
 ```
 core@coreos1 ~ $ systemctl cat myapp.service 
 # /etc/systemd/system/myapp.service 
@@ -32,7 +32,7 @@ ExecStart=/usr/bin/docker run --name busybox1 busybox /bin/sh -c "while true; do
 [Install] 
 WantedBy=multi-user.target  #
 ```
-再看看docker.service
+myapp.service依赖于docker.service。再看看docker.service
 ```
 core@coreos1 ~ $ systemctl cat docker.service 
 # /usr/lib64/systemd/system/docker.service 
@@ -68,14 +68,14 @@ ListenStream=/var/run/docker.sock  #监听网络流， sequential packet等的�
 WantedBy=sockets.target 
 
 ```
-其中.targets 启动级别 ，参考[这里](http://zh.wikipedia.org/wiki/%E8%BF%90%E8%A1%8C%E7%BA%A7%E5%88%AB)。通过下面命令可以查看目标单元下面启动的服务。
+其中`.targets`启动级别 ，参考[这里](http://zh.wikipedia.org/wiki/%E8%BF%90%E8%A1%8C%E7%BA%A7%E5%88%AB)。通过下面命令可以查看目标单元下面启动的服务。
 ```
 core@coreos1 /etc/systemd/system $ systemctl show -p "Wants" multi-user.target 
 Wants=system-config.target user-config.target myapp.service systemd-networkd.service motdgen.service getty.target dbus.service sshd-ke 
 core@coreos1 /etc/systemd/system $ systemctl show -p "Wants" sockets.target 
 Wants=systemd-journald.socket systemd-journald-dev-log.socket systemd-udevd-control.socket dbus.socket systemd-shutdownd.socket system
 ```
-可见，myapp.service启动之前需要启动docker.service,并且使用socket激活式来让docker监听/var/run/docker.sock,myapp使用docker client在busybox启动的container里面不停地指出hello world。
+systemctl start myapp.service的流程就是： myapp.service启动之前需要启动docker.service,并且使用socket激活式来让docker监听和处理/var/run/docker.sock上的网络流和数据包,然后在myapp.service调用docker client启动一个busybox container，并且在container里面不停地执行一个echo hello world的shell命令。
 
 至于更加详细的有关systemd的介绍，可以参见systemd官方文档[http://www.freedesktop.org/software/systemd/man](http://www.freedesktop.org/software/systemd/man)
 
