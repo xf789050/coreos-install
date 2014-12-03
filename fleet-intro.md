@@ -3,13 +3,13 @@
 传统的sysvinit使用[inittab](http://www.2cto.com/os/201108/98426.html)来控制init完成之后，执行哪些shell脚本。大量的shell脚本执行，效率低下， 并且无法并行执行。因此产出了systemd。systemd 是linux操作系统下面系统和服务的init管理软件,当boot过程启动第一个进程（PID=1）的时候，systemd启动并且维护用户空间的服务。旨在尽可能启动更少进程；尽可能将更多进程并行启动，“其开发目标是提供更优秀的框架以表示系统服务间的依赖关系，并依此实现系统初始化时服务的并行启动，同时达到降低Shell的系统开销的效果，最终代替现在常用的System V与BSD风格init程序”(摘自http://zh.wikipedia.org/wiki/Systemd)。
 
 systemd的特性有：
-支持并行化任务
-同时采用socket式与D-Bus总线式激活服务；
-按需启动守护进程（daemon）；
-利用 Linux 的 cgroups 监视进程；
-支持快照和系统恢复；
-维护挂载点和自动挂载点；
-各服务间基于依赖关系进行精密控制。
+* 支持并行化任务
+* 同时采用socket式与D-Bus总线式激活服务；
+* 按需启动守护进程（daemon）；
+* 利用 Linux 的 cgroups 监视进程；
+* 支持快照和系统恢复；
+* 维护挂载点和自动挂载点；
+* 各服务间基于依赖关系进行精密控制。
 
 有关使用systemd的文档： [http://www.freedesktop.org/software/systemd/man/](http://www.freedesktop.org/software/systemd/man/)
 举个例子来说明他的功能和使用方法。测试环境当然选择安装好的coreos host。
