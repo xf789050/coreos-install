@@ -98,8 +98,8 @@ fleet基于etcd（分布式kv）和systemd构建，在coreos集群上提供分�
 
 coreos集群
 
-[!host](https://coreos.com/assets/images/media/Host-Diagram.png)
-[!cluster](https://coreos.com/assets/images/media/5-Machine-Cluster.png)
+![host](https://coreos.com/assets/images/media/Host-Diagram.png)
+![cluster](https://coreos.com/assets/images/media/5-Machine-Cluster.png)
 
 coreos集群中的每个系统都执行一个单独的fleetd守护进程。fleetd即是engine，也可以是client。engine担当units调度决策者，agent担当unit执行者。engine和client使
 用协调模式，周期性的产生实例当前的状态的一个快照，并且跟etcd维护的期望状态对比，并且产生一定的动作来满足期望。
