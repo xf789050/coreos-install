@@ -3,7 +3,10 @@
 
 目前有很多工具可以实现这个需求(例如zk，etcd)，这些工具的普遍原则就是一个服务启动的时候，必须手动注册进入配置管理服务器，停止的时候，也必须从其中去除。注册之后，其他服务可以在配置管理服务器可以搜索搭配这些新增服务的实例列表。
 
-随着docker的火爆，一些docker配套的服务发现软件也开始出现了。例如[synapse](https://github.com/airbnb/synapse),并在此推荐两篇使用介绍的文章：[《服务发现与 Docker》](http://www.tuicool.com/articles/J3MRjm) 和[《Docker 与 服务发现 - 2》](http://www.tuicool.com/articles/6v2iMnA)，[使用 Etcd 和 Haproxy 做 Docker 服务发现](http://segmentfault.com/blog/yexiaobai/1190000000730186)。
+随着docker的火爆，一些docker配套的服务发现软件也开始出现了。例如[synapse](https://github.com/airbnb/synapse),并在此推荐几篇相关服务发现的文章：
+* [《服务发现与 Docker》](http://www.tuicool.com/articles/J3MRjm) 
+* [《Docker 与 服务发现 - 2》](http://www.tuicool.com/articles/6v2iMnA)，
+* [《使用 Etcd 和 Haproxy 做 Docker 服务发现》](http://segmentfault.com/blog/yexiaobai/1190000000730186)。
 
 那coreos如何来做服务发现呢？
 在coreos中使用了一种sidekick的模式来做服务发现。
@@ -41,7 +44,8 @@ ExecStop=/usr/bin/etcdctl rm /services/website/apache@%i
 [X-Fleet]
 MachineOf=apache@%i.service
 ```
-里面使用到的MachineOf来保证apache@%i.service可以和apache-discovery@%i.service`跑在同一个机器上，因此，apache-discovery@.service会将所在机器上的80端口和版本信息，并且每隔45s更新一下etcd中的`/services/website/apache@%i`，设置ttl超时为60s,如果发现端口不存在了， 就会在最晚90s后发现，并且将对应的服务信息从etcd中删除。
+里面使用到的MachineOf来保证apache@%i.service可以和apache-discovery@%i.service`跑在同一个机器上，因此，apache-discovery@.service会将所在机器上的80端口和版本信息，并且每隔45s更新一下etcd中的`/services/website/apache@%i`，设置ttl超时为60s,如果发现端口不存在了， 就会在最晚90s后发现，并且将对应的服务信息从etcd中删除。结果如下：
+
 
 并且我们的nginx服务的实例会从etcd里面获取（watch）/services/website/apache@%i的变化的信息，例如：
 ```
