@@ -27,7 +27,7 @@ ExecStop=/usr/bin/docker stop apache1
 [X-Fleet]
 Conflicts=apache@*.service
 ```
-其中最后的`Conflicts=apache@*.service`表示不同的apache@*.service为了提供服务的高可用性会分布在不同的机器上。可以看到启动的apache服务会对外暴露80端口。
+其中最后的 `Conflicts=apache@*.service` 表示不同的apache@*.service为了提供服务的高可用性会分布在不同的机器上。可以看到启动的apache服务会对外暴露80端口。
 同时，我们做一个监控service来监控2个节点的健康。
 ```
 [Unit]
@@ -57,6 +57,7 @@ $ etcdctl get /services/website/apache@1
 * [《服务发现与 Docker》](http://www.tuicool.com/articles/J3MRjm) 
 * [《Docker 与 服务发现 - 2》](http://www.tuicool.com/articles/6v2iMnA)
 * [《使用 Etcd 和 Haproxy 做 Docker 服务发现》](http://segmentfault.com/blog/yexiaobai/1190000000730186)。
+
 不过原理都是差不多。大家可以做更多的细致的，更低延时的服务发现。
 
 
