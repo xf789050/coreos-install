@@ -3,14 +3,10 @@
 
 目前有很多工具可以实现这个需求(例如zk，etcd)，这些工具的普遍原则就是一个服务启动的时候，必须手动注册进入配置管理服务器，停止的时候，也必须从其中去除。注册之后，其他服务可以在配置管理服务器可以搜索搭配这些新增服务的实例列表。
 
-随着docker的火爆，一些docker配套的服务发现软件也开始出现了。例如[synapse](https://github.com/airbnb/synapse),并在此推荐两篇使用介绍的文章：
-* [《服务发现与 Docker》](http://www.tuicool.com/articles/J3MRjm) 
-* [《Docker 与 服务发现 - 2》](http://www.tuicool.com/articles/6v2iMnA)
-* [《使用 Etcd 和 Haproxy 做 Docker 服务发现》](http://segmentfault.com/blog/yexiaobai/1190000000730186)。
 
 那coreos如何来做服务发现呢？
 
-在coreos中使用了一种sidekick的模式来做服务发现。
+在coreos中使用了一种sidekick的模式来做服务发现。其实就是利用etcd的key的ttl特性。
 
 sidekick模式很像 Synapse，使用一个隔离的的服务（进程）代理来监控提供服务的实例。
 首先假设我们在2个机器上跑一个apache服务，apache@1.service和apache@2.service
@@ -56,6 +52,12 @@ $ etcdctl get /services/website/apache@1
 { "host": "coreos2", "port": 80, "version": "52c7248a14" }
 ```
 其实，针对单个机器，我们看出， coreos给出的实例非常的简陋，但是非常容易实现。
+
+随着docker的火爆，一些docker配套的服务发现软件也开始出现了。例如[synapse](https://github.com/airbnb/synapse),并在此推荐两篇使用介绍的文章：
+* [《服务发现与 Docker》](http://www.tuicool.com/articles/J3MRjm) 
+* [《Docker 与 服务发现 - 2》](http://www.tuicool.com/articles/6v2iMnA)
+* [《使用 Etcd 和 Haproxy 做 Docker 服务发现》](http://segmentfault.com/blog/yexiaobai/1190000000730186)。
+不过原理都是差不多。大家可以做更多的细致的，更低延时的服务发现。
 
 
 
