@@ -32,28 +32,42 @@ server.New
 server.Run
 > s.hrt.Beat   向etcd注册心跳 ，告诉大家我来了。
 > go s.Monitor()  监控并心跳正常发送，如果异常，最多重试4次，在etcd保存设置机器存活的超时ttl。
+
 -- m.check(hrt) 尝试发送心跳，成功则获得最近的更新索引（Node.ModifiedIndex）
               定期的注册server所在的机器的状态，汇报通过PeriodicRefresh生成的dynamicState ， 做服务发现。 
 
 > go s.api.Available(s.stop)   将api的http状态设置为可用，即可以接受fleetctl请求
 
 > go s.mach.PeriodicRefresh(machineStateRefreshInterval, s.stop)   定期更新dynamicState （相对于静态，存放的是机器相关ç配置信息）
+
 -- m.Refresh()  定期的获取MachineState{ID，PublicIP，Metadata}, 更新dynamicState，最后往etcd汇报m.State的时候就会优先返回dynamicState
             
 >  go s.agent.Heartbeat(s.stop)   
+
 --  a.registry.UnitHeartbeat(j, machID, ttl) 定期的更新job-state到etcd。 
 
 > go s.aReconciler.Run(s.agent, s.stop)   启动协调器，维护agent的状态不断的向etcd中state的状态同步
+
 -- NewPeriodicReconciler(reconcileInterval, reconcile, ar.rStream)  每隔reconcileInterval执行一次Reconcile，
+
 -- Run
+
 --- 在eStream或者ticker到期 定时触发agent跟registry状态的同步
+
 --- ar.Reconcile(a)    将agent的状态转移到期望状态
+
 ---- desiredAgentState（a,reg）从registry 获得agent的units ， jobs以及agent所在机器的状态
+
 ----- reg.Units() 获得所有的unit
+
 ----- reg.Schedule() 调度unit，按照unit名字排序
+
 ------ 获得所有 /etcd-key-prefix/job下面的job 以及状态（inactive | loaded | launched）
+
 ------ 获得/etcd-key-prefix/states/的 units 以及状态 (LOAD | ACTIVE  | SUB )
------- determineJobState(heartbeats[name], su.TargetMachineID, us) 根绝job最近的state 和其unit的的状态， 生成满足期望的job。
+
+------ determineJobState(heartbeats[name], su.TargetMachineID, us) 根绝job最近的state 和其unit的的状态， 
+生成满足期望的job。
 ---- calculateTaskChainsForUnits （dAgentState, cAgentState）  计算出agent需要满足期望的任务链，
 ---- ar.launchTaskChain(tc, a) 执行任务
                             
