@@ -68,35 +68,50 @@ server.Run
 
 ------ determineJobState(heartbeats[name], su.TargetMachineID, us) 根绝job最近的state 和其unit的的状态， 
 生成满足期望的job。
+
 ---- calculateTaskChainsForUnits （dAgentState, cAgentState）  计算出agent需要满足期望的任务链，
+
 ---- ar.launchTaskChain(tc, a) 执行任务
                             
 > go s.engine.Run(s.engineReconcileInterval, s.stop)    维护coreos集群的状态： 机器和ScheduledUnits，ScheduledUnits包括全局global units（所有的agent都执行的units）和jobs。
+
 -- reconcile
+
 --- renewLeadership 如果自己是leader，更新存活的租期为leaseTTL，如果不是则尝试acquireLeadership竞争leader，竞争的过程就是都去etcd创建一个/etcd-key-prefix/lease/engine-leader的key，首先创建的成为leader。 成为leader之后，首先执行
+
 ---- engine.Reconciler.Reconcile()
+
 ----- calculateClusterTasks  首先调度jobs，判断job调度到的目标机器是否可以被执行job，如果无法执行就将job设置为未调度。判断如下：
 
 > * 如果job指定了target machineId，调度之
 > * target machine 必须满足job需要的metadata（配置文件里面的MachineMetadata， 例如metadata="region=us-west,az=us-west-1"），
 > * 跟machineof指定的job在同一个机器
 > * 跟conflict指定的job不在同一个机器
+
 ----- 然后调用engine.leastLoadedScheduler.Decide, 选择一个负载最小（sortableAgentStates.Less）的机器，也就是执行scheduled units的job数最少的机器，将job 调度（clust.schedule(j.Name, dec.machineID)）到选出来的机器
 
 > beatchan := make(chan *unit.UnitStateHeartbeat)    
 > go s.usGen.Run(beatchan, s.stop)      心跳包生成，每1s心跳一次
+
 -- Generate() 生成心跳，返回一个管道
+
 ---  lastSubscribed 填充
+
 ---- GetUnitStates （subscribed） 获得订阅的unit的状态，获得机器的report信息
          
 > go s.usPub.Run(beatchan, s.stop)     分发心跳包， 跟sub通过beatchan来传递心跳
--- 生成一个每ttl/2s分发一次的goroutine
---- queueForPublish
---  生成numPublishers个分发toPublish（调用queueForPublish）的任务
---- toPublish是一个队列，存放的是unit的名字， 从这里看出来，fleet报告的状态是最终状态，而不是历史连续的一个状态。
----  生成一个分发beatchan的goroutine
----- queueForPublish
 
+-- 生成一个每ttl/2s分发一次的goroutine
+
+--- queueForPublish
+
+--  生成numPublishers个分发toPublish（调用queueForPublish）的任务
+
+--- toPublish是一个队列，存放的是unit的名字， 从这里看出来，fleet报告的状态是最终状态，而不是历史连续的一个状态。
+
+---  生成一个分发beatchan的goroutine
+
+---- queueForPublish
 
   [1]: http://www.serfdom.cn/usr/uploads/2014/12/3607585694.png
 
