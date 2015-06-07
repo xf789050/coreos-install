@@ -1,0 +1,21 @@
+#!/bin/bash
+
+set -e
+
+BASE_URL="http://core-os.club/usr/iso"
+
+tmpdir="$HOME/tmp/coreos-install"
+mkdir -p $tmpdir && rm -rf "$tmpdir/*" && cd $tmpdir
+
+###  get coreos-install
+wget "${BASE_URL}/coreos-install"
+wget "${BASE_URL}/cloud-config.yaml"
+wget "${BASE_URL}/static.network"
+
+mv static.network  /etc/systemd/network/
+systemctl restart systemd-networkd 
+
+chmod +x coreos-install 
+
+./coreos-install -d /dev/sda -C stable -c ./cloud-config.yaml
+
